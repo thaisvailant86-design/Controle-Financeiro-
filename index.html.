@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finanças da Família</title>
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --green: #16a34a;
+      --red: #dc2626;
+      --yellow: #ca8a04;
+      --dark: #172033;
+      --muted: #64748b;
+      --background: #f1f5f9;
+      --card: #ffffff;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--background);
+      color: var(--dark);
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: white;
+      padding: 28px 18px;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 0;
+      opacity: .9;
+    }
+
+    main {
+      width: min(1200px, calc(100% - 28px));
+      margin: 22px auto 50px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .cards {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .two-columns {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, .05);
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .metric-value {
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    .positive {
+      color: var(--green);
+    }
+
+    .negative {
+      color: var(--red);
+    }
+
+    .warning {
+      color: var(--yellow);
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 20px;
+    }
+
+    form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      padding: 11px;
+      font-size: 14px;
+    }
+
+    input,
+    select {
+      margin-top: 5px;
+      background: white;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+      background: var(--primary);
+      color: white;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    button.secondary {
+      background: #475569;
+    }
+
+    button.danger {
+      background: var(--red);
+      padding: 7px 10px;
+      width: auto;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .actions button {
+      width: auto;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 720px;
+    }
+
+    th,
+    td {
+      padding: 12px 8px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      font-size: 14px;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+
+    .bar-row {
+      margin: 13px 0;
+    }
+
+    .bar-title {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .bar-bg {
+      height: 12px;
+      background: #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      border-radius: 10px;
+      background: var(--primary);
+    }
+
+    .notice {
+      padding: 14px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .cards {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .two-columns {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 550px) {
+      .cards,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      header h1 {
+        font-size: 23px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Finanças da Família</h1>
+    <p>Controle financeiro de Thaís e Alcimar</p>
+  </header>
+
+  <main>
+    <div class="notice">
+      Os dados ficam salvos somente neste navegador. Não cadastre senhas,
+      números de cartão, contas bancárias ou outras informações sensíveis.
+    </div>
+
+    <section class="grid cards">
+      <div class="card">
+        <div class="metric-label">Renda mensal em dinheiro</div>
+        <div id="incomeValue" class="metric-value">R$ 0,00</div>
+      </div>
+
+      <div class="card">
+        <div class="metric-label">Benefícios Swile</div>
+        <div id="benefitValue" class="metric-value">R$ 0,00</div>
+      </div>
+
+      <div class="card">
+        <div class="metric-label">Despesas cadastradas</div>
+        <div id="expenseValue" class="metric-value">R$ 0,00</div>
+      </div>
+
+      <div class="card">
+        <div class="metric-label">Saldo disponível</div>
+        <div id="balanceValue" class="metric-value">R$ 0,00</div>
+      </div>
+    </section>
+
+    <br>
+
+    <section class="grid two-columns">
+      <div class="card">
+        <h2>Adicionar movimentação</h2>
+
+        <form id="movementForm">
+          <div class="form-grid">
+            <div>
+              <label>Tipo</label>
+              <select id="type" required>
+                <option value="expense">Despesa</option>
+                <option value="income">Receita</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Descrição</label>
+              <input id="description" required placeholder="Ex.: Mercado">
+            </div>
+
+            <div>
+              <label>Valor</label>
+              <input id="amount" type="number" min="0.01" step="0.01" required placeholder="0,00">
+            </div>
+
+            <div>
+              <label>Responsável</label>
+              <select id="responsible">
+                <option>Thaís</option>
+                <option>Alcimar</option>
+                <option>Família</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Categoria</label>
+              <select id="category">
+                <option>Essencial</option>
+                <option>Importante</option>
+                <option>Ajustável</option>
+                <option>Supérfluo</option>
+                <option>A confirmar</option>
+              </select>
+            </div>
+
+            <div>
+              <label>Forma de pagamento</label>
+              <select id="payment">
+                <option>Dinheiro/conta</option>
+                <option>Vale-alimentação</option>
+                <option>Auxílio home office</option>
+                <option>Cartão Porto Seguro</option>
+                <option>Cartão Santander</option>
+                <option>Outro</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit">Adicionar movimentação</button>
+        </form>
+
+        <div class="actions">
+          <button class="secondary" onclick="restoreDefaults()">
+            Restaurar dados iniciais
+          </button>
+
+          <button class="danger" onclick="clearAll()">
+            Apagar todos os dados
+          </button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Simulação de janeiro</h2>
+
+        <p class="small">
+          A simulação considera a renda futura de Thaís e Alcimar,
+          mantendo as despesas atuais.
+        </p>
+
+        <div class="metric-label">Renda futura em dinheiro</div>
+        <div id="futureIncome" class="metric-value">R$ 0,00</div>
+
+        <br>
+
+        <div class="metric-label">Saldo projetado</div>
+        <div id="futureBalance" class="metric-value">R$ 0,00</div>
+
+        <br>
+
+        <div class="metric-label">Aumento mensal de renda</div>
+        <div id="incomeIncrease" class="metric-value positive">R$ 0,00</div>
+      </div>
+    </section>
+
+    <br>
+
+    <section class="grid two-columns">
+      <div class="card">
+        <h2>Despesas por categoria</h2>
+        <div id="categoryChart"></div>
+      </div>
+
+      <div class="card">
+        <h2>Distribuição por responsável</h2>
+        <div id="responsibleChart"></div>
+      </div>
+    </section>
+
+    <br>
+
+    <section class="card">
+      <h2>Movimentações cadastradas</h2>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Descrição</th>
+              <th>Valor</th>
+              <th>Responsável</th>
+              <th>Categoria</th>
+              <th>Pagamento</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+
+          <tbody id="movementsTable"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const STORAGE_KEY = "financas_familia_v1";
+
+    const initialData = {
+      incomes: [
+        {
+          description: "Salário Thaís",
+          amount: 6300,
+          responsible: "Thaís",
+          category: "Receita",
+          payment: "Dinheiro/conta"
+        },
+        {
+          description: "Salário Alcimar",
+          amount: 5500,
+          responsible: "Alcimar",
+          category: "Receita",
+          payment: "Dinheiro/conta"
+        },
+        {
+          description: "Vale-alimentação",
+          amount: 700,
+          responsible: "Thaís",
+          category: "Benefício",
+          payment: "Vale-alimentação"
+        },
+        {
+          description: "Auxílio home office",
+          amount: 150,
+          responsible: "Thaís",
+          category: "Benefício",
+          payment: "Auxílio home office"
+        }
+      ],
+
+      expenses: [
+        {
+          description: "Mercado/açougue",
+          amount: 1500,
+          responsible: "Família",
+          category: "Essencial",
+          payment: "Dinheiro/conta"
+        },
+        {
+          description: "Parcela do carro",
+          amount: 2500,
+          responsible: "Família",
+          category: "Importante",
+          payment: "Dinheiro/conta"
+        },
+        {
+          description: "Água",
+          amount: 180,
+          responsible: "Família",
+          category: "Essencial",
+          payment: "Dinheiro/conta"
+        },
+        {
+          description: "Luz",
+          amount: 80,
+          responsible: "Família",
+          category: "Essencial",
+          payment: "Dinheiro/conta"
+        },
+        {
+          description: "Internet",
+          amount: 140,
+          responsible: "Família",
+          category: "Importante",
+          payment: "Dinheiro/conta"
+        },
+        {
+          description: "Celulares",
+          amount: 170,
+          responsible: "Família",
+          category: "Importante",
+          payment: "Dinheiro/conta"
+        },
+        {
+          description: "Cartão Porto Seguro",
+          amount: 6100,
+          responsible: "Família",
+          category: "A confirmar",
+          payment: "Cartão Porto Seguro"
+        },
+        {
+          description: "Cartão Santander",
+          amount: 1500,
+          responsible: "Família",
+          category: "A confirmar",
+          payment: "Cartão Santander"
+        },
+        {
+          description: "Combustível",
+          amount: 500,
+          responsible: "Família",
+          category: "Importante",
+          payment: "Dinheiro/conta"
+        },
+        {
+          description: "Lazer",
+          amount: 600,
+          responsible: "Família",
+          category: "Ajustável",
+          payment: "Dinheiro/conta"
+        }
+      ]
+    };
+
+    let data = loadData();
+
+    function loadData() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : structuredClone(initialData);
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function money(value) {
+      return Number(value).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+      });
+    }
+
+    function total(items) {
+      return items.reduce((sum, item) => sum + Number(item.amount), 0);
+    }
+
+    function render() {
+      const salaryIncome = data.incomes
+        .filter(item => item.category !== "Benefício")
+        .reduce((sum, item) => sum + Number(item.amount), 0);
+
+      const benefits = data.incomes
+        .filter(item => item.category === "Benefício")
+        .reduce((sum, item) => sum + Number(item.amount), 0);
+
+      const expenses = total(data.expenses);
+      const balance = salaryIncome - expenses;
+
+      document.getElementById("incomeValue").textContent = money(salaryIncome);
+      document.getElementById("benefitValue").textContent = money(benefits);
+      document.getElementById("expenseValue").textContent = money(expenses);
+
+      const balanceElement = document.getElementById("balanceValue");
+      balanceElement.textContent = money(balance);
+      balanceElement.className = "metric-value " + (balance >= 0 ? "positive" : "negative");
+
+      const futureIncome = 13300;
+      const futureBalance = futureIncome - expenses;
+
+      document.getElementById("futureIncome").textContent = money(futureIncome);
+
+      const futureBalanceElement = document.getElementById("futureBalance");
+      futureBalanceElement.textContent = money(futureBalance);
+      futureBalanceElement.className =
+        "metric-value " + (futureBalance >= 0 ? "positive" : "negative");
+
+      document.getElementById("incomeIncrease").textContent =
+        money(futureIncome - salaryIncome);
+
+      renderTable();
+      renderCategoryChart();
+      renderResponsibleChart();
+    }
+
+    function renderTable() {
+      const table = document.getElementById("movementsTable");
+      table.innerHTML = "";
+
+      const movements = [
+        ...data.incomes.map(item => ({ ...item, type: "Receita" })),
+        ...data.expenses.map(item => ({ ...item, type: "Despesa" }))
+      ];
+
+      movements.forEach((item, index) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td class="${item.type === "Receita" ? "positive" : "negative"}">
+            ${item.type}
+          </td>
+          <td>${escapeHtml(item.description)}</td>
+          <td>${money(item.amount)}</td>
+          <td>${escapeHtml(item.responsible)}</td>
+          <td>${escapeHtml(item.category)}</td>
+          <td>${escapeHtml(item.payment)}</td>
+          <td>
+            <button class="danger" onclick="removeMovement('${item.type}', ${index})">
+              Excluir
+            </button>
+          </td>
+        `;
+
+        table.appendChild(row);
+      });
+    }
+
+    function renderCategoryChart() {
+      const container = document.getElementById("categoryChart");
+      const totals = {};
+
+      data.expenses.forEach(item => {
+        totals[item.category] = (totals[item.category] || 0) + Number(item.amount);
+      });
+
+      const max = Math.max(...Object.values(totals), 1);
+      container.innerHTML = "";
+
+      Object.entries(totals).forEach(([category, value]) => {
+        container.innerHTML += `
+          <div class="bar-row">
+            <div class="bar-title">
+              <span>${escapeHtml(category)}</span>
+              <strong>${money(value)}</strong>
+            </div>
+            <div class="bar-bg">
+              <div class="bar" style="width:${(value / max) * 100}%"></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function renderResponsibleChart() {
+      const container = document.getElementById("responsibleChart");
+      const totals = {};
+
+      data.expenses.forEach(item => {
+        totals[item.responsible] =
+          (totals[item.responsible] || 0) + Number(item.amount);
+      });
+
+      const max = Math.max(...Object.values(totals), 1);
+      container.innerHTML = "";
+
+      Object.entries(totals).forEach(([responsible, value]) => {
+        container.innerHTML += `
+          <div class="bar-row">
+            <div class="bar-title">
+              <span>${escapeHtml(responsible)}</span>
+              <strong>${money(value)}</strong>
+            </div>
+            <div class="bar-bg">
+              <div class="bar" style="width:${(value / max) * 100}%"></div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    document.getElementById("movementForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const type = document.getElementById("type").value;
+      const item = {
+        description: document.getElementById("description").value.trim(),
+        amount: Number(document.getElementById("amount").value),
+        responsible: document.getElementById("responsible").value,
+        category: document.getElementById("category").value,
+        payment: document.getElementById("payment").value
+      };
+
+      if (!item.description || item.amount <= 0) {
+        alert("Informe uma descrição e um valor válido.");
+        return;
+      }
+
+      if (type === "income") {
+        item.category = "Receita";
+        data.incomes.push(item);
+      } else {
+        data.expenses.push(item);
+      }
+
+      saveData();
+      render();
+      this.reset();
+
+      alert("Movimentação adicionada.");
+    });
+
+    function removeMovement(type, index) {
+      if (!confirm("Deseja excluir esta movimentação?")) return;
+
+      if (type === "Receita") {
+        data.incomes.splice(index, 1);
+      } else {
+        const incomeCount = data.incomes.length;
+        data.expenses.splice(index - incomeCount, 1);
+      }
+
+      saveData();
+      render();
+    }
+
+    function restoreDefaults() {
+      if (!confirm("Restaurar os dados iniciais?")) return;
+
+      data = structuredClone(initialData);
+      saveData();
+      render();
+    }
+
+    function clearAll() {
+      if (!confirm("Apagar todas as receitas e despesas?")) return;
+
+      data = {
+        incomes: [],
+        expenses: []
+      };
+
+      saveData();
+      render();
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    render();
+  </script>
+</body>
+</html>
